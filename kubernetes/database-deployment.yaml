@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: postgres:13
+        env:
+        - name: POSTGRES_DB
+          value: "customer_data"
+        - name: POSTGRES_USER
+          value: "user"
+        - name: POSTGRES_PASSWORD
+          value: "password"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: db-storage
+          mountPath: /var/lib/postgresql/data
+        - name: db-init-sql
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: db-pvc
+      - name: db-init-sql
+        configMap:
+          name: db-init-sql-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+spec:
+  selector:
+    app: db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-sql-configmap
+data:
+  init.sql: |
+    CREATE TABLE chat_logs (
+        id SERIAL PRIMARY KEY,
+        customer_name VARCHAR(255) NOT NULL,
+        chat_text TEXT NOT NULL,
+        timestamp TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    INSERT INTO chat_logs (customer_name, chat_text) VALUES
+    ('John Doe', 'Hi, I would like to schedule an appointment for this Friday at 2pm.'),
+    ('Jane Smith', 'I need to reschedule my appointment to next Monday at 10am.'),
+    ('Peter Jones', 'Can I book a meeting for tomorrow at 3pm?'),
+    ('Mary Johnson', 'I want to confirm my appointment for Wednesday at 11am.'),
+    ('David Williams', 'Is there any availability on Thursday afternoon?');

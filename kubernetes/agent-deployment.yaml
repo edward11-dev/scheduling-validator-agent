@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent
+  template:
+    metadata:
+      labels:
+        app: agent
+    spec:
+      containers:
+      - name: agent
+        image: your-docker-hub-username/scheduling-validator-agent:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "/app/credentials.json"
+        volumeMounts:
+        - name: google-credentials
+          mountPath: "/app/credentials.json"
+          readOnly: true
+      volumes:
+      - name: google-credentials
+        secret:
+          secretName: google-credentials-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-service
+spec:
+  selector:
+    app: agent
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

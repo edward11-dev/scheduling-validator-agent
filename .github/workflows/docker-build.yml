@@ -28,4 +28,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: profed11/scheduling-validator-agent:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/scheduling-validator-agent:latest

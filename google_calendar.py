@@ -31,8 +31,9 @@ def get_credentials():
                 os.remove("token.json")
                 return get_credentials()
         else:
+            credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "credentials.json")
             flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOpes
+                credentials_path, SCOPES
             )
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run

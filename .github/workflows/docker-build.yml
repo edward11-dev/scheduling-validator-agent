@@ -28,4 +28,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: your-docker-hub-username/scheduling-validator-agent:latest
+        tags: profed11/scheduling-validator-agent:latest

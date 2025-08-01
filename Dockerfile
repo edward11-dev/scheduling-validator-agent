@@ -15,8 +15,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
-# Define environment variables
-ENV GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
-
 # Run agent.py when the container launches
 CMD ["python", "agent.py"]

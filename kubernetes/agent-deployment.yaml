@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: agent
-        image: your-docker-hub-username/scheduling-validator-agent:latest
+        image: profed11/scheduling-validator-agent:latest
         ports:
         - containerPort: 80
         env:

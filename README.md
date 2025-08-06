@@ -79,7 +79,7 @@ Navigate to your repository's `Settings` > `Secrets and variables` > `Actions` a
 
 1.  **`GOOGLE_CREDENTIALS`**: Your Google Calendar API key.
 2.  **`PAT_TOKEN`**: The GitHub Personal Access Token you created.
-3.  **`SSH_PRIVATE_KEY`**: The full content of the private PEM key (`.pem` file) that you use to access your EC2 instances.
+3.  **`AWS_EC2_SSH_PRIVATE_KEY`**: The full content of the private PEM key (`.pem` file) that you use to access your EC2 instances.
 
 ## Step 4: Encrypt and Store the API Key
 
